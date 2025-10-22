@@ -58,3 +58,76 @@ tasks:
     - go mod tidy
     - echo 'Verifying dependencies...'
     - go mod verify
+
+# Docker Tasks
+  docker:build:
+    desc: build the stringanalyzer Docker image
+    cmds:
+      - echo 'Building Docker image...'
+      - docker build -t stringanalyzer:latest .
+
+  docker:up:
+    desc: start all services with docker-compose
+    cmds:
+      - echo 'Starting services...'
+      - docker compose up -d
+
+  docker:up:build:
+    desc: build and start all services
+    cmds:
+      - echo 'Building and starting services...'
+      - docker compose up -d --build
+
+  docker:down:
+    desc: stop all services
+    cmds:
+      - echo 'Stopping services...'
+      - docker compose down
+
+  docker:logs:
+    desc: view stringanalyzer logs
+    cmds:
+      - docker compose logs -f stringanalyzer
+
+  docker:logs:all:
+    desc: view all service logs
+    cmds:
+      - docker compose logs -f
+
+  docker:shell:
+    desc: open shell in stringanalyzer container
+    cmds:
+      - docker exec -it stringanalyzer sh
+
+  docker:clean:
+    desc: remove all containers and volumes
+    deps: [confirm]
+    cmds:
+      - echo 'Cleaning up Docker resources...'
+      - docker compose down -v
+      - docker rmi stringanalyzer:latest 2>/dev/null || true
+
+  docker:ps:
+    desc: show running containers
+    cmds:
+      - docker compose ps
+
+  docker:restart:
+    desc: restart the stringanalyzer service
+    cmds:
+      - echo 'Restarting stringanalyzer...'
+      - docker compose restart stringanalyzer
+
+  dev:
+    desc: start full development environment
+    cmds:
+      - docker compose up -d --build
+      - echo 'Services starting... waiting for health checks...'
+      - sleep 10
+      - echo 'Testing health endpoint...'
+      - curl -f http://localhost:8080/kaithheathcheck || echo "App not ready yet, check logs with task docker:logs"
+
+  dev:stop:
+    desc: stop development environment
+    cmds:
+      - docker compose down

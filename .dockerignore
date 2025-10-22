@@ -1,0 +1,37 @@
+touch .dockerignore
+```
+
+Paste this content:
+```
+.git
+.gitignore
+.github
+README.md
+*.md
+
+.env
+.env.local
+.env.*.local
+
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+tmp/
+bin/
+dist/
+build/
+*.exe
+*.test
+*.out
+*.log
+
+vendor/
+
+.DS_Store
+Thumbs.db
+
+*_test.go
+testdata/
