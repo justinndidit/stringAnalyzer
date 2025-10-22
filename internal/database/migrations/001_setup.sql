@@ -1,0 +1,11 @@
+CREATE TABLE strings (
+    id SERIAL PRIMARY KEY,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    string_value TEXT NOT NULL,
+    is_palindrome BOOLEAN DEFAULT TRUE,
+    unique_characters INT NOT NULL,
+    word_count INT NOT NULL,
+    sha256_hash VARCHAR(256) NOT NULL
+);
