@@ -29,7 +29,7 @@ func New(app *application.Application, cfg *config.Config) (*Server, error) {
 
 func (s *Server) SetupHTTPServer(handler http.Handler) {
 	s.httpServer = &http.Server{
-		Addr:         ":" + s.Config.Server.Port,
+		Addr:         "0.0.0.0:" + s.Config.Server.Port,
 		Handler:      handler,
 		ReadTimeout:  time.Duration(s.Config.Server.ReadTimeout) * time.Second,
 		WriteTimeout: time.Duration(s.Config.Server.WriteTimeout) * time.Second,
@@ -53,6 +53,10 @@ func (s *Server) Shutdown(ctx context.Context) error {
 	if err := s.httpServer.Shutdown(ctx); err != nil {
 		return fmt.Errorf("failed to shutdown HTTP server: %w", err)
 	}
+
+	s.App.Logger.Info().
+		Str("addr", s.httpServer.Addr).
+		Msg("HTTP server configured")
 
 	if err := s.App.DB.Close(); err != nil {
 		return fmt.Errorf("failed to close database connection: %w", err)
